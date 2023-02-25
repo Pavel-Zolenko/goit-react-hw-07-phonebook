@@ -3,7 +3,7 @@ import 'yup-phone';
 
 import { Formik, ErrorMessage } from 'formik';
 import { addContact} from "redux/operations";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 
 import {
@@ -34,9 +34,17 @@ const initialValues = {
 };
 
 export const ContactForm = () => {
-   const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const contacts = useSelector(state => state.contacts.contacts)
  
   const handleSubmit = (values, { resetForm }) => {
+    if (contacts.some(
+      contact => contact.name.toLowerCase() === values.name.toLowerCase()
+    )
+    ) {
+      alert(`${values.name} is already in contacts.`);
+      return;
+    }
      dispatch(addContact(values));
     
     resetForm();
